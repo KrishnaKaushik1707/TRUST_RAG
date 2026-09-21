@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 TrustRAG Ingestion Demonstration & Inspection Script.
 
