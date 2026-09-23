@@ -25,10 +25,11 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.generation.llm import LLMGenerator
-from app.generation.models import QueryRequest, QueryResponse, RetrievedChunkInfo
+from app.generation.models import QueryRequest, QueryResponse, RetrievedChunkInfo, SentenceVerification
 from app.ingestion.pipeline import IngestionPipeline
 from app.retrieval.hybrid_retriever import HybridRetriever
 from app.retrieval.vector_store import ChromaVectorStore
+from app.verification.nli_verifier import NLIVerifier
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -80,10 +81,11 @@ async def lifespan(app: FastAPI):
 
     app.state.retriever = retriever
     app.state.generator = LLMGenerator()
+    app.state.verifier = NLIVerifier()
 
     logger.info(
         f"TrustRAG initialization complete: {app.state.total_documents} documents, "
-        f"{app.state.total_chunks} chunks ready for hybrid retrieval."
+        f"{app.state.total_chunks} chunks ready for hybrid retrieval & verification."
     )
 
     yield
@@ -131,6 +133,7 @@ async def query_documents(request: QueryRequest):
 
     retriever: HybridRetriever = getattr(app.state, "retriever", None)
     generator: LLMGenerator = getattr(app.state, "generator", None)
+    verifier: NLIVerifier = getattr(app.state, "verifier", None)
 
     if not retriever or not generator:
         raise HTTPException(status_code=503, detail="Retrieval engine is not initialized.")
@@ -147,7 +150,12 @@ async def query_documents(request: QueryRequest):
         # 2. LLM answer generation with strict citation rules
         answer, provider, citations = generator.generate(query_text, search_results)
 
-        # 3. Assemble diagnostic chunk info for UI inspection
+        # 3. Sentence-level NLI claim verification
+        verified_sentences: List[SentenceVerification] = []
+        if verifier and search_results:
+            verified_sentences = verifier.verify_answer(answer, search_results)
+
+        # 4. Assemble diagnostic chunk info for UI inspection
         retrieved_chunk_info: List[RetrievedChunkInfo] = []
         for r in search_results:
             retrieved_chunk_info.append(
@@ -168,6 +176,7 @@ async def query_documents(request: QueryRequest):
             query=query_text,
             answer=answer,
             citations=citations,
+            verified_sentences=verified_sentences,
             retrieved_chunks=retrieved_chunk_info,
             provider=provider,
         )

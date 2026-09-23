@@ -72,6 +72,7 @@ export default function App() {
           role: 'assistant',
           content: data.answer,
           citations: data.citations || [],
+          verified_sentences: data.verified_sentences || [],
           retrieved_chunks: data.retrieved_chunks || [],
         },
       ]);

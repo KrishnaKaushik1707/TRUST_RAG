@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { User, Bot, Loader2, AlertCircle } from 'lucide-react';
 import CitationCard from './CitationCard';
 import DiagnosticDrawer from './DiagnosticDrawer';
+import VerifiedAnswer from './VerifiedAnswer';
 
 export default function ChatWindow({ messages, isLoading, error }) {
   const bottomRef = useRef(null);
@@ -19,7 +20,14 @@ export default function ChatWindow({ messages, isLoading, error }) {
           </div>
 
           <div className="bubble">
-            <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
+            {msg.role === 'assistant' ? (
+              <VerifiedAnswer
+                content={msg.content}
+                verifiedSentences={msg.verified_sentences || []}
+              />
+            ) : (
+              <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
+            )}
 
             {/* Citations section if assistant message has citations */}
             {msg.role === 'assistant' && msg.citations && msg.citations.length > 0 && (

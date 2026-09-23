@@ -418,3 +418,277 @@ code, pre {
   align-items: flex-start;
   gap: 10px;
 }
+
+/* ==========================================================================
+   Phase 4: Sentence-Level Claim Verification & NLI Audit UI
+   ========================================================================== */
+
+.verified-answer-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Audit Summary Bar */
+.verification-audit-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  font-size: 0.78rem;
+}
+
+.audit-bar-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.audit-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.audit-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.audit-pill.supported {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34D399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.audit-pill.partial {
+  background: rgba(245, 158, 11, 0.15);
+  color: #FBBF24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.audit-pill.unverified {
+  background: rgba(239, 68, 68, 0.15);
+  color: #F87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Highlighted Sentence Pills */
+.verified-sentences-body {
+  line-height: 1.8;
+  font-size: 0.94rem;
+}
+
+.claim-sentence-pill {
+  display: inline;
+  padding: 2px 6px;
+  margin: 0 1px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.claim-sentence-pill:hover {
+  filter: brightness(1.2);
+  transform: translateY(-1px);
+}
+
+.claim-sentence-pill.supported {
+  border-bottom: 2px solid #10B981;
+}
+
+.claim-sentence-pill.partially_supported {
+  border-bottom: 2px solid #F59E0B;
+}
+
+.claim-sentence-pill.unverified {
+  border-bottom: 2px solid #EF4444;
+}
+
+.claim-sentence-pill.active-claim {
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+  outline: 1px solid var(--accent-blue);
+}
+
+.claim-icon {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.claim-text {
+  color: var(--text-primary);
+}
+
+.claim-confidence-tag {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  vertical-align: middle;
+  padding: 1px 4px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 4px;
+}
+
+/* Claim Evidence Inspector Drawer */
+.claim-inspector-drawer {
+  margin-top: 10px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.inspector-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.inspector-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.inspector-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+}
+
+.inspector-close-btn:hover {
+  color: var(--text-primary);
+}
+
+.inspector-claim-quote {
+  font-size: 0.86rem;
+  font-style: italic;
+  color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.25);
+  padding: 8px 12px;
+  border-left: 3px solid var(--accent-blue);
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+/* NLI Confidence Scores Grid */
+.nli-scores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.nli-score-card {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+.nli-score-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.nli-score-val {
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 6px;
+}
+
+.score-meter-bg {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.score-meter-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* Evidence Box */
+.inspector-evidence-box {
+  background: rgba(2, 6, 23, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.evidence-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.evidence-doc {
+  color: var(--text-primary);
+}
+
+.evidence-page {
+  margin-left: auto;
+  font-size: 0.7rem;
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--accent-blue);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.evidence-snippet {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.inspector-no-evidence {
+  font-size: 0.8rem;
+  color: #F87171;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
