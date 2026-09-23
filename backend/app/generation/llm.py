@@ -142,6 +142,22 @@ class LLMGenerator:
                 [],
             )
 
+        # ---------------------------------------------------------------------
+        # RELEVANCE CONFIDENCE GUARDRAIL (Low-Confidence Abstention)
+        # If the top candidate from the cross-encoder is negative/low, the retriever
+        # found zero relevant documents. We immediately abstain rather than
+        # hallucinating or presenting irrelevant passages.
+        # ---------------------------------------------------------------------
+        MIN_RELEVANCE_SCORE = -2.0
+        top_score = results[0].rerank_score
+        if top_score is not None and top_score < MIN_RELEVANCE_SCORE:
+            logger.info(f"Retrieval abstention: Top score {top_score:.3f} < {MIN_RELEVANCE_SCORE}. Returning 'I don't know'.")
+            return (
+                "I do not have enough information in the provided documents to answer this question.",
+                "guardrail (low-confidence abstention)",
+                [],
+            )
+
         context_str = self._format_context(results)
         answer = ""
         active_provider = "grounded-fallback"

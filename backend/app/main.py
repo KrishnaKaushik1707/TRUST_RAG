@@ -54,8 +54,11 @@ async def lifespan(app: FastAPI):
     logger.info("Initializing TrustRAG Retrieval and Generation subsystems...")
 
     root_dir = Path(__file__).resolve().parent.parent.parent
-    sample_docs_dir = root_dir / "scratch" / "sample_docs"
-    chroma_dir = root_dir / "scratch" / "chroma_db"
+    docs_override = os.getenv("DOCS_DIR")
+    chroma_override = os.getenv("CHROMA_DIR")
+
+    sample_docs_dir = Path(docs_override) if docs_override else root_dir / "scratch" / "sample_docs"
+    chroma_dir = Path(chroma_override) if chroma_override else root_dir / "scratch" / "chroma_db"
 
     # Fallback to test fixtures if sample_docs directory is empty
     if not sample_docs_dir.exists() or not list(sample_docs_dir.glob("*.pdf")):
