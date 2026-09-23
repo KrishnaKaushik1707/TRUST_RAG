@@ -13,8 +13,8 @@ from app.ingestion.pipeline import IngestionPipeline
 
 @pytest.fixture
 def sample_docs_dir() -> Path:
-    docs_path = Path(__file__).resolve().parent.parent.parent / "scratch" / "sample_docs"
-    assert docs_path.exists(), f"Sample docs directory not found at {docs_path}"
+    docs_path = Path(__file__).resolve().parent / "fixtures"
+    assert docs_path.exists(), f"Sample docs fixtures directory not found at {docs_path}"
     return docs_path
 
 

@@ -16,7 +16,7 @@ from app.retrieval.vector_store import ChromaVectorStore
 
 @pytest.fixture(scope="module")
 def sample_chunks():
-    docs_dir = Path(__file__).resolve().parent.parent.parent / "scratch" / "sample_docs"
+    docs_dir = Path(__file__).resolve().parent / "fixtures"
     pipeline = IngestionPipeline()
     res = pipeline.ingest_directory(docs_dir)
     assert len(res["chunks"]) > 0

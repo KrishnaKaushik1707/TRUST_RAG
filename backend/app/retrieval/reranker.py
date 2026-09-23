@@ -68,7 +68,14 @@ class CrossEncoderReranker:
             return []
 
         # Prepare (query, passage) pairs for cross-attention
-        pairs = [(query, chunk.text) for chunk in candidates]
+        # Include contextual provenance header so cross-encoder can ground filename and entity queries
+        pairs = [
+            (
+                query,
+                f"[Document: {chunk.document_name} | File: {chunk.source_file} | Page: {chunk.page_number}]\n{chunk.text}",
+            )
+            for chunk in candidates
+        ]
 
         scores = self.model.predict(pairs, show_progress_bar=False)
 
